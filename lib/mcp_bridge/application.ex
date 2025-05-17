@@ -25,6 +25,10 @@ defmodule McpBridge.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: McpBridge.Supervisor]
+      :ok =
+      "python/pyproject.toml"
+      |> File.read!()
+      |> Pythonx.uv_init()
     Supervisor.start_link(children, opts)
   end
 

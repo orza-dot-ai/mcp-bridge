@@ -58,7 +58,8 @@ defmodule McpBridge.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
-      {:mllp, "~> 0.9.7"}
+      {:mllp, "~> 0.9.7"},
+      {:pythonx, github: "livebook-dev/pythonx", branch: "main"}
     ]
   end
 
