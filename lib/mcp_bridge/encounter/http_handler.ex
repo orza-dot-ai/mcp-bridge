@@ -23,7 +23,7 @@ defmodule MCPBridge.Encounter.HTTPHandler do
 
         # Process the encounter (e.g., store in database, trigger workflows)
         process_result = process_encounter(encounter)
-        Platform.Rpa.send_message(process_result)
+        MCPBridge.Rpa.send_message(process_result)
         # Return the encounter with processing result
         {:ok, Map.put(encounter, :processing_result, process_result)}
 

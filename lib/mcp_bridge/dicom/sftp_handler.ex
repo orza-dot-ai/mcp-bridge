@@ -87,7 +87,7 @@ defmodule MCPBridge.Dicom.SFTPHandler do
             %{"note" => "Not a DICOM file"}
           end
 
-          Platform.Rpa.send_message(metadata)
+          MCPBridge.Rpa.send_message
 
             # Return a map with filename, size, and metadata information
             %{
