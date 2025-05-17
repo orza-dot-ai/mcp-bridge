@@ -23,7 +23,6 @@ defmodule MCPBridge.Encounter.HTTPHandler do
 
         # Process the encounter (e.g., store in database, trigger workflows)
         process_result = process_encounter(encounter)
-        MCPBridge.Rpa.send_message(process_result)
         # Return the encounter with processing result
         {:ok, Map.put(encounter, :processing_result, process_result)}
 
@@ -112,6 +111,7 @@ defmodule MCPBridge.Encounter.HTTPHandler do
 
     status = encounter["status"] || "unknown"
     Logger.info("Encounter status: #{status}")
+    MCPBridge.Rpa.send_message(encounter)
 
     # Here you would typically:
     # 1. Store the encounter in your database

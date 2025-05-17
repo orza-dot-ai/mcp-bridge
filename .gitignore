@@ -37,3 +37,7 @@ npm-debug.log
 
 # Ignore the dev.secret.exs file
 config/dev.secret.exs
+
+python/mcp_bridge.egg-info/
+python/platform.egg-info/
+python/venv_mcp_bridge/
