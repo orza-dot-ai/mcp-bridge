@@ -37,42 +37,52 @@ defmodule MCPBridge.Dicom.SFTPHandler do
         Logger.info("[#{timestamp}] Found #{length(files)} DICOM files in #{dicom_dir}")
 
         # Process each file with size information and metadata
-        file_info = Enum.map(files, fn filename ->
-          full_path = Path.join(dicom_dir, filename)
+        file_info =
+          Enum.map(files, fn filename ->
+            full_path = Path.join(dicom_dir, filename)
 
-          # Get file size
-          size_result = case File.stat(full_path) do
-            {:ok, %{size: size}} ->
-              # Convert to human-readable format
-              format_file_size(size)
-            {:error, reason} ->
-              Logger.warn("[#{timestamp}] Failed to get size for #{filename}: #{inspect(reason)}")
-              "unknown size"
-          end
+            # Get file size
+            size_result =
+              case File.stat(full_path) do
+                {:ok, %{size: size}} ->
+                  # Convert to human-readable format
+                  format_file_size(size)
 
-          Logger.info("[#{timestamp}] Processing DICOM file: #{filename} (#{size_result})")
+                {:error, reason} ->
+                  Logger.warning(
+                    "[#{timestamp}] Failed to get size for #{filename}: #{inspect(reason)}"
+                  )
 
-          # Extract metadata if file has .dcm extension
-          metadata = if String.ends_with?(String.downcase(filename), ".dcm") do
-            try do
-              parse_dicom_metadata!(full_path)
-            rescue
-              e ->
-                Logger.error("[#{timestamp}] Failed to parse DICOM metadata for #{filename}: #{inspect(e)}")
-                %{"error" => "Failed to parse DICOM metadata"}
-            end
-          else
-            %{"note" => "Not a DICOM file"}
-          end
+                  "unknown size"
+              end
 
-          # Return a map with filename, size, and metadata information
-          %{
-            filename: filename,
-            path: full_path,
-            size: size_result,
-            metadata: metadata
-          }
-        end)
+            Logger.info("[#{timestamp}] Processing DICOM file: #{filename} (#{size_result})")
+
+            # Extract metadata if file has .dcm extension
+            metadata =
+              if String.ends_with?(String.downcase(filename), ".dcm") do
+                try do
+                  parse_dicom_metadata!(full_path)
+                rescue
+                  e ->
+                    Logger.error(
+                      "[#{timestamp}] Failed to parse DICOM metadata for #{filename}: #{inspect(e)}"
+                    )
+
+                    %{"error" => "Failed to parse DICOM metadata"}
+                end
+              else
+                %{"note" => "Not a DICOM file"}
+              end
+
+            # Return a map with filename, size, and metadata information
+            %{
+              filename: filename,
+              path: full_path,
+              size: size_result,
+              metadata: metadata
+            }
+          end)
 
         # Return the list of processed file information
         {:ok, file_info}
@@ -120,15 +130,18 @@ defmodule MCPBridge.Dicom.SFTPHandler do
     cond do
       size_in_bytes < 1024 ->
         "#{size_in_bytes} B"
+
       size_in_bytes < 1024 * 1024 ->
         kb = size_in_bytes / 1024
-        "#{:erlang.float_to_binary(kb, [decimals: 1])} KB"
+        "#{:erlang.float_to_binary(kb, decimals: 1)} KB"
+
       size_in_bytes < 1024 * 1024 * 1024 ->
         mb = size_in_bytes / (1024 * 1024)
-        "#{:erlang.float_to_binary(mb, [decimals: 1])} MB"
+        "#{:erlang.float_to_binary(mb, decimals: 1)} MB"
+
       true ->
         gb = size_in_bytes / (1024 * 1024 * 1024)
-        "#{:erlang.float_to_binary(gb, [decimals: 1])} GB"
+        "#{:erlang.float_to_binary(gb, decimals: 1)} GB"
     end
   end
 

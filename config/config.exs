@@ -63,7 +63,8 @@ config :phoenix, :json_library, Jason
 
 config :mcp_bridge, MCPBridge.Scheduler,
   jobs: [
-    {"*/5 * * * *", {MCPBridge.Dicom.SFTPHandler, :fetch_and_process_file, []}}
+    {"*/5 * * * *", {MCPBridge.Dicom.SFTPHandler, :fetch_and_process_file, []}},
+    {"*/5 * * * *", {MCPBridge.Encounter.HTTPHandler, :fetch_and_process_encounter, []}}
   ]
 
 # Import environment specific config. This must remain at the bottom
