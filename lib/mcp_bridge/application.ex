@@ -14,8 +14,8 @@ defmodule McpBridge.Application do
       {Phoenix.PubSub, name: McpBridge.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: McpBridge.Finch},
-      {MLLP.Receiver, [port: 4090, dispatcher: McpBridge.Dispatcher]},
-
+      {MLLP.Receiver, [port: 4090, dispatcher: MCPBridge.HL7.MLLPDispatcher]},
+      MCPBridge.Scheduler,
       # Start a worker by calling: McpBridge.Worker.start_link(arg)
       # {McpBridge.Worker, arg},
       # Start to serve requests, typically the last entry
@@ -25,10 +25,12 @@ defmodule McpBridge.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: McpBridge.Supervisor]
-      :ok =
+
+    :ok =
       "python/pyproject.toml"
       |> File.read!()
       |> Pythonx.uv_init()
+
     Supervisor.start_link(children, opts)
   end
 

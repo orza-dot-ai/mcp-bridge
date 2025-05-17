@@ -1,4 +1,4 @@
-defmodule McpBridge.Dispatcher do
+defmodule MCPBridge.HL7.MLLPDispatcher do
   @moduledoc """
   MCP Bridge dispatcher handles incoming HL7 messages and routes them to the appropriate
   handlers within the application. It implements the MLLP.Dispatcher behaviour to integrate
@@ -10,7 +10,7 @@ defmodule McpBridge.Dispatcher do
   @spec dispatch(:mllp_hl7 | :mllp_unknown, binary(), MLLP.FramingContext.t()) ::
           {:ok, MLLP.FramingContext.t()}
   def dispatch(:mllp_unknown, _, state) do
-    Logger.warn("Received unknown message type")
+    Logger.warning("Received unknown message type")
     msg = MLLP.Envelope.wrap_message("Unknown message type received")
     {:ok, %{state | reply_buffer: msg}}
   end
