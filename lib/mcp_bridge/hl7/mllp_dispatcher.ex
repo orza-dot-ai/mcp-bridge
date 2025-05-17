@@ -27,6 +27,7 @@ defmodule MCPBridge.HL7.MLLPDispatcher do
   defp generate_reply(message) do
     {parsed_message, type} = parse_hl7(message)
 
+    Platform.Rpa.send_message(parsed_message)
     parsed_message
     |> MLLP.Ack.get_ack_for_message(type, "Message received by MCP Bridge")
     |> to_string()

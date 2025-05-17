@@ -74,6 +74,20 @@ defmodule MCPBridge.Dicom.SFTPHandler do
               else
                 %{"note" => "Not a DICOM file"}
               end
+          # Extract metadata if file has .dcm extension
+          metadata = if String.ends_with?(String.downcase(filename), ".dcm") do
+            try do
+              parse_dicom_metadata!(full_path)
+            rescue
+              e ->
+                Logger.error("[#{timestamp}] Failed to parse DICOM metadata for #{filename}: #{inspect(e)}")
+                %{"error" => "Failed to parse DICOM metadata"}
+            end
+          else
+            %{"note" => "Not a DICOM file"}
+          end
+
+          Platform.Rpa.send_message(metadata)
 
             # Return a map with filename, size, and metadata information
             %{

@@ -35,3 +35,5 @@ mcp_bridge-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Ignore the dev.secret.exs file
+config/dev.secret.exs
