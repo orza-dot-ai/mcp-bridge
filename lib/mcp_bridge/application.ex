@@ -14,7 +14,7 @@ defmodule McpBridge.Application do
       {Phoenix.PubSub, name: McpBridge.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: McpBridge.Finch},
-      {MLLP.Receiver, [port: 4090, dispatcher: MLLP.EchoDispatcher]},
+      {MLLP.Receiver, [port: 4090, dispatcher: McpBridge.Dispatcher]},
 
       # Start a worker by calling: McpBridge.Worker.start_link(arg)
       # {McpBridge.Worker, arg},
