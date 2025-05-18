@@ -16,6 +16,7 @@ defmodule McpBridge.Application do
       {Finch, name: McpBridge.Finch},
       {MLLP.Receiver, [port: 4090, dispatcher: MCPBridge.HL7.MLLPDispatcher]},
       MCPBridge.Scheduler,
+      {Task.Supervisor, name: McpBridge.RPASupervisor},
       # Start a worker by calling: McpBridge.Worker.start_link(arg)
       # {McpBridge.Worker, arg},
       # Start to serve requests, typically the last entry

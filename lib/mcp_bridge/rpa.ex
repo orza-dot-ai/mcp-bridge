@@ -12,14 +12,20 @@ defmodule MCPBridge.Rpa do
 
     note_content = Jason.encode!(message)
 
-    {_result_redact, _globals} =
-      Pythonx.eval(rpa_script, %{
-        "username" => username,
-        "password" => password,
-        "totp_secret" => totp_secret,
-        "patient_id" => patient_id,
-        "note_content" => note_content,
-        "base_url" => base_url
-      })
+       # ... existing code ...
+
+    Task.Supervisor.async_nolink(McpBridge.RPASupervisor, fn ->
+      {_result_redact, _globals} =
+        Pythonx.eval(rpa_script, %{
+          "username" => username,
+          "password" => password,
+          "totp_secret" => totp_secret,
+          "patient_id" => patient_id,
+          "note_content" => String.slice(note_content, 0, 500),
+          "base_url" => base_url
+        })
+    end)
+
+
   end
 end
